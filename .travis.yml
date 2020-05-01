@@ -10,18 +10,15 @@ before_install:
 script:
   - docker run -e CI=true hades12/docker-client-test npm test
   
- after_success:
+after_success:
   - docker build -t hades12/docker-complex-test-client ./client
   - docker build -t hades12/docker-complex-test-server ./server
   - docker build -t hades12/docker-complex-test-worker ./worker
-  - docker build -t hades12/docker-complex-test-nginx ./nginx
-  
+  - docker build -t hades12/docker-complex-test-nginx ./nginx  
   # docker login
-  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
-  
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin  
   # push images 
   - docker push hades12/docker-complex-test-client
   - docker push hades12/docker-complex-test-server
   - docker push hades12/docker-complex-test-worker
   - docker push hades12/docker-complex-test-nginx
-  
