@@ -1,0 +1,34 @@
+{
+ "AWSEBDockerrunVersion": 2,
+ "containerDefinitions": [
+	{
+		"name" : "client",
+		"image": "hades12/docker-complex-test-client",
+		"hostname": "client",
+		"essential": false
+	},
+	{
+		"name" : "server",
+		"image": "hades12/docker-complex-test-server",
+		"hostname": "api",
+		"essential": false
+	},
+	{
+		"name" : "worker",
+		"image": "hades12/docker-complex-test-worker",
+		"hostname": "worker",
+		"essential": false
+	},
+	{
+		"name" : "nginx",
+		"image": "hades12/docker-complex-test-nginx",
+		"hostname": "nginx",
+		"essential": true,
+		"portMappings":[{
+			"hostPort": 80,
+			"containerPort": 80
+		}],
+		"links":["client", "server"]
+	}
+ ]
+}

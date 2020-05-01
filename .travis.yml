@@ -22,3 +22,16 @@ after_success:
   - docker push hades12/docker-complex-test-server
   - docker push hades12/docker-complex-test-worker
   - docker push hades12/docker-complex-test-nginx
+
+# deploy:
+ # edge: true
+ # provider: elasticbeanstalk
+ # region: "us-east-2"
+ # app: "docker"
+ # env: "docker-env"
+ # bucket_name: "elasticbeanstalk-us-east-2-923445559289"
+ # bucket_path: "docker"
+ # on:
+   # branch: master
+ # access_key_id: $aws_access_key
+ # secret_access_key: $aws_secret_key
