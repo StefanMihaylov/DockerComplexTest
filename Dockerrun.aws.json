@@ -5,25 +5,29 @@
 		"name" : "client",
 		"image": "hades12/docker-complex-test-client",
 		"hostname": "client",
-		"essential": false
+		"essential": false,
+		"memory": 128
 	},
 	{
 		"name" : "server",
 		"image": "hades12/docker-complex-test-server",
 		"hostname": "api",
-		"essential": false
+		"essential": false,
+		"memory": 128
 	},
 	{
 		"name" : "worker",
 		"image": "hades12/docker-complex-test-worker",
 		"hostname": "worker",
-		"essential": false
+		"essential": false,
+		"memory": 128
 	},
 	{
 		"name" : "nginx",
 		"image": "hades12/docker-complex-test-nginx",
 		"hostname": "nginx",
 		"essential": true,
+		"memory": 128,
 		"portMappings":[{
 			"hostPort": 80,
 			"containerPort": 80
