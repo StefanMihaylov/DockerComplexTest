@@ -1,43 +1,29 @@
 language: generic
 sudo: required # super user permissions
 services:
-  - docker 
+  - docker
+env:
+  global:
+    - GIT_SHA=$(git rev-parse HEAD)
+    - CLOUDSDK_CORE_DISABLE_PROMPTS=1	
 before_install:
   - openssl aes-256-cbc -K $encrypted_0c35eebf403c_key -iv $encrypted_0c35eebf403c_iv -in service-account.json.enc -out service-account.json -d
   - curl https://sdk.cloud.google.com | bash > /dev/null;
   - source $HOME/google-cloud-sdk/path.bash.inc
   - gcloud components update kubectl
   - gcloud auth activate-service-account --key-file service-account.json
-   
+  - gcloud config set project k8s-test-276114
+  - gcloud config set compute/zone europe-west4-a
+  - gcloud container clusters get-credentials multi-cluster
  
-# before_install:
-  # - docker build -t hades12/docker-client-test -f ./client/Dockerfile.dev ./client
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin 
+  - docker build -t hades12/docker-client-test -f ./client/Dockerfile.dev ./client
    
-# script:
-  # - docker run -e CI=true hades12/docker-client-test npm test
+script:
+  - docker run -e CI=true hades12/docker-client-test npm test
   
-# after_success:
-  # - docker build -t hades12/docker-complex-test-client ./client
-  # - docker build -t hades12/docker-complex-test-server ./server
-  # - docker build -t hades12/docker-complex-test-worker ./worker
-  # - docker build -t hades12/docker-complex-test-nginx ./nginx  
-  # # docker login
-  # - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin  
-  # # push images 
-  # - docker push hades12/docker-complex-test-client
-  # - docker push hades12/docker-complex-test-server
-  # - docker push hades12/docker-complex-test-worker
-  # - docker push hades12/docker-complex-test-nginx
-
-# deploy:
- # edge: true
- # provider: elasticbeanstalk
- # region: "us-east-2"
- # app: "docker"
- # env: "docker-env"
- # bucket_name: "elasticbeanstalk-us-east-2-923445559289"
- # bucket_path: "docker"
- # on:
-   # branch: master
- # access_key_id: $aws_access_key
- # secret_access_key: $aws_secret_key
+deploy:
+  provider: script
+  script: bash ./deploy.sh
+  on:
+    branch: master
